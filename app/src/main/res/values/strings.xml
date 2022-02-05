@@ -4,4 +4,8 @@
     <string name="welcome">Welcome</string>
     <string name="current_balance">Current balance</string>
     <string name="view_all_customers">View all customers</string>
+    <string name="profile_image">Profile_Image</string>
+    <string name="balance">Balance</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
 </resources>

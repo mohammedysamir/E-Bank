@@ -52,5 +52,5 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     compile 'org.fabiomsr:moneytextview:1.1.0'
-
+    implementation 'androidx.cardview:cardview:1.0.0'
 }

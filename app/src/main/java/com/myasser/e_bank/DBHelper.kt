@@ -16,13 +16,14 @@ const val balance_column = "Balance"
 const val image_column = "ImagePath"
 const val amount_column = "Amount"
 
-class DBHelper(private val context: Context) : SQLiteOpenHelper(context, databaseName, null, version) {
+class DBHelper(private val context: Context) :
+    SQLiteOpenHelper(context, databaseName, null, version) {
     private val customerTable = "CustomerTable"
     private val transactionTable = "TransactionTable"
     private val customerTableQuery =
-            "Create Table $customerTable ($name_column Varchar(20) Not Null primary key, $email_column Varchar(20) Not Null primary key, $phone_column INTEGER Not Null, $balance_column Real, $image_column TEXT );"
+        "Create Table $customerTable ($name_column Varchar(20) Not Null primary key, $email_column Varchar(20) Not Null primary key, $phone_column INTEGER Not Null, $balance_column Real, $image_column TEXT );"
     private val transactionTableQuery =
-            "Create Table $transactionTable ($name_column Varchar(20) Not Null primary key,$amount_column Real);"
+        "Create Table $transactionTable ($name_column Varchar(20) Not Null primary key,$amount_column Real);"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(customerTableQuery)
@@ -63,7 +64,7 @@ class DBHelper(private val context: Context) : SQLiteOpenHelper(context, databas
                 val email: String = result.getString(result.getColumnIndex(email_column))
                 val phone: String = result.getString(result.getColumnIndex(phone_column))
                 val balance: Float = result.getFloat(result.getColumnIndex(balance_column))
-                val image: String = result.getString(result.getColumnIndex(image_column))
+                val image: Int = result.getInt(result.getColumnIndex(image_column))
                 customerList.add(Customer(name, phone, email, image, balance))
             } while (result.moveToNext())
         }

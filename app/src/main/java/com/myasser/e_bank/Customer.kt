@@ -5,7 +5,7 @@ class Customer(
     private var name: String,
     private var phone: String,
     private var email: String,
-    private val image_path: String,
+    private val image_path: Int,
     private var balance: Float
 ) {
     fun updateBalance(new_balance: Float) {
@@ -16,7 +16,7 @@ class Customer(
         return name
     }
 
-    fun getCustomerImage(): String {
+    fun getCustomerImage(): Int {
         return image_path
     }
 

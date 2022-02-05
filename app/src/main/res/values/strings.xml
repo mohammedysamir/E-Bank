@@ -8,4 +8,7 @@
     <string name="balance">Balance</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>
+    <string name="last_transactions">Last transactions</string>
+    <string name="to">To</string>
+    <string name="amount">Amount</string>
 </resources>

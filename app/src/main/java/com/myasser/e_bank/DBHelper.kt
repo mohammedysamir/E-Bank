@@ -85,6 +85,12 @@ class DBHelper(context: Context) :
         return customerList
     }
 
+    fun updateCustomerBalance(db: SQLiteDatabase?, customer: Customer, amount: Float) {
+        val strSQL =
+            "UPDATE myTable SET $balance_column = ${customer.getCustomerBalance() + amount} WHERE $name_column = ${customer.getCustomerName()}"
+        db?.execSQL(strSQL)
+    }
+
     @SuppressLint("Range")
     fun readTransactions(): ArrayList<Transaction> {
         val transactionList = ArrayList<Transaction>()

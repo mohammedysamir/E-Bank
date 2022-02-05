@@ -16,7 +16,7 @@ const val balance_column = "Balance"
 const val image_column = "ImagePath"
 const val amount_column = "Amount"
 
-class DBHelper(private val context: Context) :
+class DBHelper(context: Context) :
     SQLiteOpenHelper(context, databaseName, null, version) {
     private val customerTable = "CustomerTable"
     private val transactionTable = "TransactionTable"
@@ -42,6 +42,19 @@ class DBHelper(private val context: Context) :
         contentValues.put("Image", customer.getCustomerImage())
 
         database.insert(customerTable, null, contentValues)
+    }
+
+    fun addCustomerList(customerList: ArrayList<Customer>) {
+        val database = this.writableDatabase
+        for (customer in customerList) {
+            val contentValues = ContentValues()
+            contentValues.put("Name", customer.getCustomerName())
+            contentValues.put("Email", customer.getCustomerEmail())
+            contentValues.put("Phone", customer.getCustomerPhone())
+            contentValues.put("Balance", customer.getCustomerBalance())
+            contentValues.put("Image", customer.getCustomerImage())
+            database.insert(customerTable, null, contentValues)
+        }
     }
 
     fun addTransaction(toCustomer: Customer, amount: Float) {
@@ -77,6 +90,25 @@ class DBHelper(private val context: Context) :
         val transactionList = ArrayList<Transaction>()
         val reader = this.readableDatabase
         val result = reader.rawQuery("Select * from $this.transactionTable", null)
+        if (result.moveToFirst()) {
+            do {
+                val name: String = result.getString(result.getColumnIndex(name_column))
+                val amount: Float = result.getFloat(result.getColumnIndex(amount_column))
+                transactionList.add(Transaction(name, amount))
+            } while (result.moveToNext())
+        }
+        result.close()
+        return transactionList
+    }
+
+    @SuppressLint("Range")
+    fun readTransactionsForCustomer(customer_name: String): ArrayList<Transaction> {
+        val transactionList = ArrayList<Transaction>()
+        val reader = this.readableDatabase
+        val result = reader.rawQuery(
+            "Select * from $this.transactionTable where $name_column = $customer_name",
+            null
+        )
         if (result.moveToFirst()) {
             do {
                 val name: String = result.getString(result.getColumnIndex(name_column))

@@ -18,8 +18,8 @@ const val amount_column = "Amount"
 
 class DBHelper(context: Context) :
     SQLiteOpenHelper(context, databaseName, null, version) {
-    private val customerTable = "CustomerTable"
-    private val transactionTable = "TransactionTable"
+    val customerTable = "CustomerTable"
+    val transactionTable = "TransactionTable"
     private val customerTableQuery =
         "Create Table $customerTable ($name_column Varchar(20) Not Null primary key, $email_column Varchar(20) Not Null primary key, $phone_column INTEGER Not Null, $balance_column Real, $image_column TEXT );"
     private val transactionTableQuery =
@@ -32,7 +32,7 @@ class DBHelper(context: Context) :
 
     override fun onUpgrade(db: SQLiteDatabase?, old: Int, new: Int) {}
 
-    fun addCustomer(customer: Customer) {
+     fun addCustomer(customer: Customer) {
         val database = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put("Name", customer.getCustomerName())
@@ -124,5 +124,16 @@ class DBHelper(context: Context) :
         }
         result.close()
         return transactionList
+    }
+
+    fun isTableEmpty(tableName: String): Boolean {
+        val db = this.getWritableDatabase()
+        val query = "SELECT count(*) FROM $tableName";
+        val mcursor = db.rawQuery(query, null)
+        mcursor.moveToFirst();
+        val count: Int = mcursor.getInt(0);
+        if (count > 0)
+            return false
+        return true
     }
 }

@@ -10,6 +10,7 @@ import java.util.*
 const val databaseName = "Customers"
 const val version = 1
 const val name_column = "Name"
+const val receiver_column = "To"
 const val email_column = "Email"
 const val phone_column = "Phone"
 const val balance_column = "Balance"
@@ -21,9 +22,9 @@ class DBHelper(context: Context) :
     val customerTable = "CustomerTable"
     val transactionTable = "TransactionTable"
     private val customerTableQuery =
-        "Create Table $customerTable ($name_column Varchar(20) Not Null primary key, $email_column Varchar(20) Not Null primary key, $phone_column INTEGER Not Null, $balance_column Real, $image_column TEXT );"
+        "Create Table $customerTable ($name_column Varchar(20) Not Null primary key, $email_column Varchar(20) Not Null unique, $phone_column INTEGER Not Null, $balance_column Real, $image_column TEXT );"
     private val transactionTableQuery =
-        "Create Table $transactionTable ($name_column Varchar(20) Not Null primary key,$amount_column Real);"
+        "Create Table $transactionTable ($name_column Varchar(20) Not Null,$receiver_column Varchar(20) Not Null ,$amount_column Real);"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(customerTableQuery)
@@ -32,14 +33,14 @@ class DBHelper(context: Context) :
 
     override fun onUpgrade(db: SQLiteDatabase?, old: Int, new: Int) {}
 
-     fun addCustomer(customer: Customer) {
+    fun addCustomer(customer: Customer) {
         val database = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put("Name", customer.getCustomerName())
-        contentValues.put("Email", customer.getCustomerEmail())
-        contentValues.put("Phone", customer.getCustomerPhone())
-        contentValues.put("Balance", customer.getCustomerBalance())
-        contentValues.put("Image", customer.getCustomerImage())
+        contentValues.put(name_column, customer.getCustomerName())
+        contentValues.put(email_column, customer.getCustomerEmail())
+        contentValues.put(phone_column, customer.getCustomerPhone())
+        contentValues.put(balance_column, customer.getCustomerBalance())
+        contentValues.put(image_column, customer.getCustomerImage())
 
         database.insert(customerTable, null, contentValues)
     }
@@ -48,11 +49,11 @@ class DBHelper(context: Context) :
         val database = this.writableDatabase
         for (customer in customerList) {
             val contentValues = ContentValues()
-            contentValues.put("Name", customer.getCustomerName())
-            contentValues.put("Email", customer.getCustomerEmail())
-            contentValues.put("Phone", customer.getCustomerPhone())
-            contentValues.put("Balance", customer.getCustomerBalance())
-            contentValues.put("Image", customer.getCustomerImage())
+            contentValues.put(name_column, customer.getCustomerName())
+            contentValues.put(email_column, customer.getCustomerEmail())
+            contentValues.put(phone_column, customer.getCustomerPhone())
+            contentValues.put(balance_column, customer.getCustomerBalance())
+            contentValues.put(image_column, customer.getCustomerImage())
             database.insert(customerTable, null, contentValues)
         }
     }
@@ -60,8 +61,8 @@ class DBHelper(context: Context) :
     fun addTransaction(toCustomer: Customer, amount: Float) {
         val database = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put("Name", toCustomer.getCustomerName())
-        contentValues.put("Amount", amount)
+        contentValues.put(name_column, toCustomer.getCustomerName())
+        contentValues.put(amount_column, amount)
 
         database.insert(transactionTable, null, contentValues)
     }
@@ -112,7 +113,7 @@ class DBHelper(context: Context) :
         val transactionList = ArrayList<Transaction>()
         val reader = this.readableDatabase
         val result = reader.rawQuery(
-            "Select * from $this.transactionTable where $name_column = $customer_name",
+            "Select $receiver_column,$amount_column from $transactionTable where $name_column = [$customer_name];",
             null
         )
         if (result.moveToFirst()) {

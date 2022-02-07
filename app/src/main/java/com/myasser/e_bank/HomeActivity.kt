@@ -48,8 +48,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.view_customer_button -> {
                 //navigate to all_customer screen
+                startActivity(Intent(this@HomeActivity,ViewCustomerActitiy::class.java))
             }
         }
     }
 }
-//TODO: when intent to  the profile screen, send main customer data to display

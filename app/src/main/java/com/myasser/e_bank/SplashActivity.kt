@@ -46,4 +46,3 @@ class SplashActivity : AppCompatActivity() {
         mainCustomer= db.readCustomers()[0]
     }
 }
-//TODO: add data to db here and mark main customer.

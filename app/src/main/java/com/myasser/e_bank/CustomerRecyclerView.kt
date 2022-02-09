@@ -10,10 +10,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
 
 class CustomerRecyclerView(val list: ArrayList<Customer>, val context: Context) :
     RecyclerView.Adapter<CustomerRecyclerView.ViewHolder>() {
+
+    companion object{
+        val selectedCustomerList=ArrayList<Customer>()
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val customerName: TextView = itemView.findViewById(R.id.customer_name)
         val profile: ImageView = itemView.findViewById(R.id.profile_icon)
@@ -52,10 +56,12 @@ class CustomerRecyclerView(val list: ArrayList<Customer>, val context: Context) 
             if (holder.isSelected) {
                 holder.customerCard.setBackgroundResource(R.drawable.unselected_customer)
                 holder.isSelected = false
+                selectedCustomerList.remove(customerItem)
             } else //not selected
             {
                 holder.customerCard.setBackgroundResource(R.drawable.selected_customer)
                 holder.isSelected = true
+                selectedCustomerList.add(customerItem)
             }
         }
     }

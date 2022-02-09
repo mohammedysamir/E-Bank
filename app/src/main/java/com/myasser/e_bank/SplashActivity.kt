@@ -1,16 +1,15 @@
 package com.myasser.e_bank
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import java.util.*
 
 class SplashActivity : AppCompatActivity() {
     companion object{
-        lateinit var mainCustomer:Customer
+        lateinit var currentCustomer:Customer
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +42,6 @@ class SplashActivity : AppCompatActivity() {
             db.addCustomerList(customerList)
         }
         //get main customer -> customer #0 in the db
-        mainCustomer= db.readCustomers()[0]
+        currentCustomer= db.readCustomers()[0]
     }
 }

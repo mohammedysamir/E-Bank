@@ -18,13 +18,13 @@ const val image_column = "ImagePath"
 const val amount_column = "Amount"
 
 class DBHelper(context: Context) :
-    SQLiteOpenHelper(context, databaseName, null, version) {
+        SQLiteOpenHelper(context, databaseName, null, version) {
     val customerTable = "CustomerTable"
     val transactionTable = "TransactionTable"
     private val customerTableQuery =
-        "Create Table $customerTable ($name_column Varchar(20) Not Null primary key, $email_column Varchar(20) Not Null unique, $phone_column INTEGER Not Null, $balance_column Real, $image_column TEXT );"
+            "Create Table $customerTable ($name_column Varchar(20) Not Null primary key, $email_column Varchar(20) Not Null unique, $phone_column INTEGER Not Null, $balance_column Real, $image_column TEXT );"
     private val transactionTableQuery =
-        "Create Table $transactionTable ($name_column Varchar(20) Not Null,$receiver_column Varchar(20) Not Null ,$amount_column Real);"
+            "Create Table $transactionTable ($name_column Varchar(20) Not Null,$receiver_column Varchar(20) Not Null ,$amount_column Real);"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(customerTableQuery)
@@ -58,10 +58,11 @@ class DBHelper(context: Context) :
         }
     }
 
-    fun addTransaction(toCustomer: Customer, amount: Float) {
+    fun addTransaction(fromCustomer:Customer,toCustomer: Customer, amount: Float) {
         val database = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(name_column, toCustomer.getCustomerName())
+        contentValues.put(name_column, fromCustomer.getCustomerName())
+        contentValues.put(receiver_column, toCustomer.getCustomerName())
         contentValues.put(amount_column, amount)
 
         database.insert(transactionTable, null, contentValues)
@@ -88,7 +89,7 @@ class DBHelper(context: Context) :
 
     fun updateCustomerBalance(db: SQLiteDatabase?, customer: Customer, amount: Float) {
         val strSQL =
-            "UPDATE myTable SET $balance_column = ${customer.getCustomerBalance() + amount} WHERE $name_column = ${customer.getCustomerName()}"
+                "UPDATE myTable SET $balance_column = ${customer.getCustomerBalance() + amount} WHERE $name_column = ${customer.getCustomerName()}"
         db?.execSQL(strSQL)
     }
 
@@ -99,9 +100,10 @@ class DBHelper(context: Context) :
         val result = reader.rawQuery("Select * from $this.transactionTable", null)
         if (result.moveToFirst()) {
             do {
-                val name: String = result.getString(result.getColumnIndex(name_column))
+                val fromCustomerName: String = result.getString(result.getColumnIndex(name_column))
+                val toCustomerName: String = result.getString(result.getColumnIndex(receiver_column))
                 val amount: Float = result.getFloat(result.getColumnIndex(amount_column))
-                transactionList.add(Transaction(name, amount))
+                transactionList.add(Transaction(fromCustomerName, toCustomerName, amount))
             } while (result.moveToNext())
         }
         result.close()
@@ -113,26 +115,27 @@ class DBHelper(context: Context) :
         val transactionList = ArrayList<Transaction>()
         val reader = this.readableDatabase
         val result = reader.rawQuery(
-            "Select $receiver_column,$amount_column from $transactionTable where $name_column = [$customer_name];",
-            null
+                "Select $receiver_column,$amount_column from $transactionTable where $name_column = [$customer_name];",
+                null
         )
         if (result.moveToFirst()) {
             do {
-                val name: String = result.getString(result.getColumnIndex(name_column))
+                val toCustomerName: String = result.getString(result.getColumnIndex(receiver_column))
                 val amount: Float = result.getFloat(result.getColumnIndex(amount_column))
-                transactionList.add(Transaction(name, amount))
+                transactionList.add(Transaction(customer_name, toCustomerName, amount))
             } while (result.moveToNext())
         }
         result.close()
         return transactionList
     }
 
+    @SuppressLint("Recycle")
     fun isTableEmpty(tableName: String): Boolean {
         val db = this.writableDatabase
         val query = "SELECT count(*) FROM $tableName";
-        val mcursor = db.rawQuery(query, null)
-        mcursor.moveToFirst();
-        val count: Int = mcursor.getInt(0);
+        val cursor = db.rawQuery(query, null)
+        cursor.moveToFirst();
+        val count: Int = cursor.getInt(0);
         if (count > 0)
             return false
         return true

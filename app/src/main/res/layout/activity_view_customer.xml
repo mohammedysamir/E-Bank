@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:padding="16dp"
-    tools:context=".ViewCustomerActitiy">
+    tools:context=".ViewCustomerActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/customerView"
@@ -18,12 +18,13 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/transfer_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@drawable/primary_button"
         android:padding="20dp"
-        android:text="Transfer to selected"
+        android:text="@string/transfer_to_selected"
         android:textAllCaps="false"
         android:textColor="@color/Secondary_color"
         android:textSize="25sp"

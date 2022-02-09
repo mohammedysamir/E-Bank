@@ -35,13 +35,11 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
             R.id.transferMoneyButton -> {
                 //2 scenarios
                 //1: current profile belongs to main customer then navigate to view all customers screen
-                if (findViewById<TextView>(R.id.user_name).text == SplashActivity.mainCustomer.getCustomerName())
-                    startActivity(Intent(this@ProfileActivity, ViewCustomerActitiy::class.java))
+                if (findViewById<TextView>(R.id.user_name).text == SplashActivity.currentCustomer.getCustomerName())
+                    startActivity(Intent(this@ProfileActivity, ViewCustomerActivity::class.java))
                 //TODO: 2- current profile in non-main customer then open transfer dialog, add transaction to the table and increase balance
 
             }
         }
     }
 }
-
-//TODO: handle button if this profile main's then navigate to view all customers, else open transfer dialog

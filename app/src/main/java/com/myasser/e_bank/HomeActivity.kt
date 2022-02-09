@@ -24,19 +24,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         mainCustomer = SplashActivity.currentCustomer
         //initiate the transaction recycler view
         linearManager = LinearLayoutManager(this)
-//        val transactionView = findViewById<RecyclerView>(R.id.transaction_view)
-//        transactionView.layoutManager = linearManager
-//        databaseHelper = DBHelper(applicationContext)
-//        //if the transaction table is not empty then show
-//        if (!databaseHelper.isTableEmpty(databaseHelper.transactionTable)) {
-//            val transactionsList =
-//                databaseHelper.readTransactionsForCustomer(mainCustomer.getCustomerName())
-//            val adapter = TransactionRecyclerView(transactionsList)
-//            transactionView.adapter = adapter
-//        }
-//        //initialize home screen with customer info
-//        findViewById<TextView>(R.id.welcome_statement).text="Welcome,"+mainCustomer.getCustomerName()
-//        findViewById<MoneyTextView>(R.id.balance).amount=mainCustomer.getCustomerBalance()
         fetchCustomerData()
     }
 
@@ -59,12 +46,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.view_customer_button -> {
                 //navigate to all_customer screen
-                startActivity(Intent(this@HomeActivity,ViewCustomerActivity::class.java))
+                startActivity(Intent(this@HomeActivity, ViewCustomerActivity::class.java))
             }
         }
     }
 
-    fun fetchCustomerData(){
+    private fun fetchCustomerData() {
         //fetch and update customer data
         val transactionView = findViewById<RecyclerView>(R.id.transaction_view)
         transactionView.layoutManager = linearManager
@@ -77,7 +64,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             transactionView.adapter = adapter
         }
         //initialize home screen with customer info
-        findViewById<TextView>(R.id.welcome_statement).text="Welcome,"+mainCustomer.getCustomerName()
-        findViewById<MoneyTextView>(R.id.balance).amount=mainCustomer.getCustomerBalance()
+        findViewById<TextView>(R.id.welcome_statement).text = "Welcome, " + mainCustomer.getCustomerName()
+        findViewById<MoneyTextView>(R.id.balance).amount = mainCustomer.getCustomerBalance()
     }
 }

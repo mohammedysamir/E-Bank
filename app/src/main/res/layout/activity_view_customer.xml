@@ -11,7 +11,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/customerView"
         android:layout_width="match_parent"
-        android:layout_height="600dp" />
+        android:layout_height="600dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.appcompat.widget.AppCompatButton
@@ -27,5 +30,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customer_card" />
+        app:layout_constraintTop_toBottomOf="@+id/customerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

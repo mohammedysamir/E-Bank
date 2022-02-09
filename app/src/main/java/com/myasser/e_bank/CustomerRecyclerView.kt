@@ -3,18 +3,12 @@ package com.myasser.e_bank
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.Color.TRANSPARENT
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -63,12 +57,14 @@ class CustomerRecyclerView(val list: ArrayList<Customer>, val context: Context) 
             profileIntent.putExtra("Customer Email", customerItem.getCustomerEmail())
             profileIntent.putExtra("Customer Image", customerItem.getCustomerImage())
             profileIntent.putExtra("Customer Balance", customerItem.getCustomerBalance())
+            profileIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(profileIntent)
         }
 
         holder.customerCard.setOnClickListener {
+            //TODO: remove selection when click again, and added final selection to a list to transfer money to
             if (holder.customerCard.background == AppCompatResources.getDrawable(context,R.drawable.selected_customer)) //already selected
-                holder.customerCard.setBackgroundColor(R.color.transparent)
+                holder.customerCard.background=AppCompatResources.getDrawable(context,R.drawable.unselected_customer)
             else //not selected
                 holder.customerCard.background=AppCompatResources.getDrawable(context,(R.drawable.selected_customer))
         }

@@ -31,6 +31,8 @@ class ViewCustomerActivity : AppCompatActivity(), View.OnClickListener {
             val customerList =
                     databaseHelper.readCustomers() //get list of customers
             //TODO: remove currentCustomer from the list -potential bug-
+            //remove current user from the list -> simple solution
+            customerList.removeAt(0)
             val adapter = CustomerRecyclerView(customerList, applicationContext)
             customerView.adapter = adapter //assigned to the recycler view to show
         }
@@ -51,7 +53,6 @@ class ViewCustomerActivity : AppCompatActivity(), View.OnClickListener {
                     val selectedCustomers = CustomerRecyclerView.selectedCustomerList
                     val currentCustomer = SplashActivity.currentCustomer
 
-                    //TODO: check available money before transfer and prompt a message if it can't be done
                     if (transactionAmount * selectedCustomers.size <= currentCustomer.getCustomerBalance()) {
                         dbHelper.updateCustomerBalance(currentCustomer, -transactionAmount * selectedCustomers.size)
                         currentCustomer.updateBalance(-transactionAmount * selectedCustomers.size) //subtract balance*selected customers

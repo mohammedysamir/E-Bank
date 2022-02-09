@@ -11,4 +11,7 @@
     <string name="last_transactions">Last transactions</string>
     <string name="to">To</string>
     <string name="amount">Amount</string>
+    <string name="confirm">Confirm</string>
+    <string name="transaction_amount_hint">Transaction amount</string>
+    <string name="transfer_to_selected">Transfer to selected</string>
 </resources>

@@ -128,7 +128,7 @@ class DBHelper(context: Context) :
     }
 
     fun isTableEmpty(tableName: String): Boolean {
-        val db = this.getWritableDatabase()
+        val db = this.writableDatabase
         val query = "SELECT count(*) FROM $tableName";
         val mcursor = db.rawQuery(query, null)
         mcursor.moveToFirst();

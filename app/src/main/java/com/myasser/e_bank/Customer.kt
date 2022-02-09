@@ -9,7 +9,7 @@ class Customer(
     private var balance: Float
 ) {
     fun updateBalance(new_balance: Float) {
-        balance = new_balance
+        balance += new_balance
     }
 
     fun getCustomerName(): String {

@@ -19,7 +19,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<ImageView>(R.id.profile_icon).setOnClickListener(this)
         findViewById<Button>(R.id.view_customer_button).setOnClickListener(this)
         //get main customer from the db
-        mainCustomer = SplashActivity.mainCustomer
+        mainCustomer = SplashActivity.currentCustomer
         //initiate the transaction recycler view
         linearManager = LinearLayoutManager(this)
         val transactionView = findViewById<RecyclerView>(R.id.transaction_view)
@@ -48,7 +48,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.view_customer_button -> {
                 //navigate to all_customer screen
-                startActivity(Intent(this@HomeActivity,ViewCustomerActitiy::class.java))
+                startActivity(Intent(this@HomeActivity,ViewCustomerActivity::class.java))
             }
         }
     }

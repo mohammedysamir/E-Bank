@@ -10,7 +10,7 @@ import java.util.*
 const val databaseName = "Customers"
 const val version = 1
 const val name_column = "Name"
-const val receiver_column = "To"
+const val receiver_column = "Receiver"
 const val email_column = "Email"
 const val phone_column = "Phone"
 const val balance_column = "Balance"
@@ -19,16 +19,19 @@ const val amount_column = "Amount"
 
 class DBHelper(context: Context) :
         SQLiteOpenHelper(context, databaseName, null, version) {
+    companion object{
+        lateinit var sqlDB: SQLiteDatabase
+    }
     val customerTable = "CustomerTable"
     val transactionTable = "TransactionTable"
     private val customerTableQuery =
             "Create Table $customerTable ($name_column Varchar(20) Not Null primary key, $email_column Varchar(20) Not Null unique, $phone_column INTEGER Not Null, $balance_column Real, $image_column TEXT );"
-    private val transactionTableQuery =
-            "Create Table $transactionTable ($name_column Varchar(20) Not Null,$receiver_column Varchar(20) Not Null ,$amount_column Real);"
+    private val transactionTableQuery: String="Create Table $transactionTable ($name_column Varchar(20) Not Null,[$receiver_column] Varchar(20) Not Null ,$amount_column Real);"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(customerTableQuery)
         db?.execSQL(transactionTableQuery)
+        sqlDB = db!!
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, old: Int, new: Int) {}
@@ -58,7 +61,7 @@ class DBHelper(context: Context) :
         }
     }
 
-    fun addTransaction(fromCustomer:Customer,toCustomer: Customer, amount: Float) {
+    fun addTransaction(fromCustomer: Customer, toCustomer: Customer, amount: Float) {
         val database = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(name_column, fromCustomer.getCustomerName())
@@ -87,10 +90,10 @@ class DBHelper(context: Context) :
         return customerList
     }
 
-    fun updateCustomerBalance(db: SQLiteDatabase?, customer: Customer, amount: Float) {
+    fun updateCustomerBalance(customer: Customer, amount: Float) {
         val strSQL =
-                "UPDATE myTable SET $balance_column = ${customer.getCustomerBalance() + amount} WHERE $name_column = ${customer.getCustomerName()}"
-        db?.execSQL(strSQL)
+                "UPDATE $customerTable SET $balance_column = ${customer.getCustomerBalance() + amount} WHERE $name_column like '${customer.getCustomerName()}';"
+        sqlDB.execSQL(strSQL)
     }
 
     @SuppressLint("Range")
@@ -115,7 +118,7 @@ class DBHelper(context: Context) :
         val transactionList = ArrayList<Transaction>()
         val reader = this.readableDatabase
         val result = reader.rawQuery(
-                "Select $receiver_column,$amount_column from $transactionTable where $name_column = [$customer_name];",
+                "Select $receiver_column,$amount_column from $transactionTable where $name_column = '$customer_name';",
                 null
         )
         if (result.moveToFirst()) {

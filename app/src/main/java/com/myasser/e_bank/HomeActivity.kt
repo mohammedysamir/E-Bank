@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.fabiomsr.moneytextview.MoneyTextView
 
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var linearManager: LinearLayoutManager
@@ -22,16 +24,25 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         mainCustomer = SplashActivity.currentCustomer
         //initiate the transaction recycler view
         linearManager = LinearLayoutManager(this)
-        val transactionView = findViewById<RecyclerView>(R.id.transaction_view)
-        transactionView.layoutManager = linearManager
-        databaseHelper = DBHelper(applicationContext)
-        //if the transaction table is not empty then show
-        if (!databaseHelper.isTableEmpty(databaseHelper.transactionTable)) {
-            val transactionsList =
-                databaseHelper.readTransactionsForCustomer(mainCustomer.getCustomerName())
-            val adapter = TransactionRecyclerView(transactionsList)
-            transactionView.adapter = adapter
-        }
+//        val transactionView = findViewById<RecyclerView>(R.id.transaction_view)
+//        transactionView.layoutManager = linearManager
+//        databaseHelper = DBHelper(applicationContext)
+//        //if the transaction table is not empty then show
+//        if (!databaseHelper.isTableEmpty(databaseHelper.transactionTable)) {
+//            val transactionsList =
+//                databaseHelper.readTransactionsForCustomer(mainCustomer.getCustomerName())
+//            val adapter = TransactionRecyclerView(transactionsList)
+//            transactionView.adapter = adapter
+//        }
+//        //initialize home screen with customer info
+//        findViewById<TextView>(R.id.welcome_statement).text="Welcome,"+mainCustomer.getCustomerName()
+//        findViewById<MoneyTextView>(R.id.balance).amount=mainCustomer.getCustomerBalance()
+        fetchCustomerData()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        fetchCustomerData()
     }
 
     override fun onClick(p0: View?) {
@@ -51,5 +62,22 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(Intent(this@HomeActivity,ViewCustomerActivity::class.java))
             }
         }
+    }
+
+    fun fetchCustomerData(){
+        //fetch and update customer data
+        val transactionView = findViewById<RecyclerView>(R.id.transaction_view)
+        transactionView.layoutManager = linearManager
+        databaseHelper = DBHelper(applicationContext)
+        //if the transaction table is not empty then show
+        if (!databaseHelper.isTableEmpty(databaseHelper.transactionTable)) {
+            val transactionsList =
+                    databaseHelper.readTransactionsForCustomer(mainCustomer.getCustomerName())
+            val adapter = TransactionRecyclerView(transactionsList)
+            transactionView.adapter = adapter
+        }
+        //initialize home screen with customer info
+        findViewById<TextView>(R.id.welcome_statement).text="Welcome,"+mainCustomer.getCustomerName()
+        findViewById<MoneyTextView>(R.id.balance).amount=mainCustomer.getCustomerBalance()
     }
 }

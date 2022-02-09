@@ -1,9 +1,12 @@
 package com.myasser.e_bank
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +20,7 @@ class ViewCustomerActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_customer)
+        findViewById<Button>(R.id.transfer_button).setOnClickListener(this)
 
         linearManager = LinearLayoutManager(this)
         val customerView = findViewById<RecyclerView>(R.id.customerView) //get recycler view from XML
@@ -25,29 +29,43 @@ class ViewCustomerActivity : AppCompatActivity(), View.OnClickListener {
         //if the customer table is not empty then show
         if (!databaseHelper.isTableEmpty(databaseHelper.customerTable)) { //if customer table is not empty then show
             val customerList =
-                databaseHelper.readCustomers() //get list of customers
-            val adapter = CustomerRecyclerView(customerList,applicationContext)
+                    databaseHelper.readCustomers() //get list of customers
+            //TODO: remove currentCustomer from the list -potential bug-
+            val adapter = CustomerRecyclerView(customerList, applicationContext)
             customerView.adapter = adapter //assigned to the recycler view to show
         }
     }
 
     override fun onClick(p0: View?) {
-        when(p0?.id){
-            R.id.transfer_button->{
-                //TODO: whenever the user clicks on the transfer selected button, open dialog that request the amount to be transferred and get all customers selected and add this to their balance
+        when (p0?.id) {
+            R.id.transfer_button -> {
+                val dbHelper = DBHelper(this)
                 //build dialog
                 val dialog = Dialog(this)
                 dialog.setContentView(R.layout.transaction_dialog)
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))//set transparent background
                 val transactionTextView = dialog.findViewById(R.id.transactionInput) as TextInputEditText
                 val confirmButton = dialog.findViewById(R.id.confirm_button) as Button
                 confirmButton.setOnClickListener {
-                    val transactionAmount:Float=transactionTextView.text.toString().toFloat()
-                    SplashActivity.currentCustomer.updateBalance(-transactionAmount) //reduce balance
-                    //get list of selected customers
+                    val transactionAmount: Float = transactionTextView.text.toString().toFloat()
+                    val selectedCustomers = CustomerRecyclerView.selectedCustomerList
+                    val currentCustomer = SplashActivity.currentCustomer
+
+                    //TODO: check available money before transfer and prompt a message if it can't be done
+                    if (transactionAmount * selectedCustomers.size <= currentCustomer.getCustomerBalance()) {
+                        dbHelper.updateCustomerBalance(currentCustomer, -transactionAmount * selectedCustomers.size)
+                        currentCustomer.updateBalance(-transactionAmount * selectedCustomers.size) //subtract balance*selected customers
+                        //get list of selected customers
+                        for (selectedCustomer in CustomerRecyclerView.selectedCustomerList) {
+                            selectedCustomer.updateBalance(transactionAmount)
+                            dbHelper.addTransaction(currentCustomer, selectedCustomer, transactionAmount) //add transaction
+                            dbHelper.updateCustomerBalance(selectedCustomer, transactionAmount)//update database
+                        }
+                    } else
+                        Toast.makeText(this, "Current balance is less than ${transactionAmount * selectedCustomers.size}", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
                 }
                 dialog.show()
-
-
             }
         }
     }

@@ -12,7 +12,7 @@ class ViewCustomerActitiy : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_customer_actitiy)
+        setContentView(R.layout.activity_view_customer)
 
         linearManager = LinearLayoutManager(this)
         val customerView = findViewById<RecyclerView>(R.id.customerView) //get recycler view from XML

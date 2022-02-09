@@ -8,30 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 class CustomerRecyclerView(val list: ArrayList<Customer>, val context: Context) :
     RecyclerView.Adapter<CustomerRecyclerView.ViewHolder>() {
-    //    val colorList: ColorStateList =ColorStateList(
-//        arrayOf(
-//            intArrayOf(android.R.attr.state_enabled), //enabled
-//            intArrayOf(-android.R.attr.state_enabled), //disabled
-//            intArrayOf(-android.R.attr.state_checked), // unchecked
-//            intArrayOf(android.R.attr.state_pressed), //pressed
-//            intArrayOf(-android.R.attr.state_pressed)// unpressed
-//        ),
-//        intArrayOf(
-//            Color.TRANSPARENT,
-//            R.color.indicator,
-//        )
-//    )
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val customerName = itemView.findViewById<TextView>(R.id.customer_name)
-        val profile = itemView.findViewById<ImageView>(R.id.profile_icon)
-        val customerCard = itemView.findViewById<ConstraintLayout>(R.id.customerInfoCard)
+        val customerName: TextView = itemView.findViewById(R.id.customer_name)
+        val profile: ImageView = itemView.findViewById(R.id.profile_icon)
+        val customerCard: ConstraintLayout = itemView.findViewById(R.id.customerInfoCard)
+        var isSelected: Boolean = false;
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -62,11 +49,14 @@ class CustomerRecyclerView(val list: ArrayList<Customer>, val context: Context) 
         }
 
         holder.customerCard.setOnClickListener {
-            //TODO: remove selection when click again, and added final selection to a list to transfer money to
-            if (holder.customerCard.background == AppCompatResources.getDrawable(context,R.drawable.selected_customer)) //already selected
-                holder.customerCard.background=AppCompatResources.getDrawable(context,R.drawable.unselected_customer)
-            else //not selected
-                holder.customerCard.background=AppCompatResources.getDrawable(context,(R.drawable.selected_customer))
+            if (holder.isSelected) {
+                holder.customerCard.setBackgroundResource(R.drawable.unselected_customer)
+                holder.isSelected = false
+            } else //not selected
+            {
+                holder.customerCard.setBackgroundResource(R.drawable.selected_customer)
+                holder.isSelected = true
+            }
         }
     }
 

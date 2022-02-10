@@ -42,32 +42,35 @@ class ViewCustomerActivity : AppCompatActivity(), View.OnClickListener {
         when (p0?.id) {
             R.id.transfer_button -> {
                 val dbHelper = DBHelper(this)
-                //build dialog
-                val dialog = Dialog(this)
-                dialog.setContentView(R.layout.transaction_dialog)
-                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))//set transparent background
-                val transactionTextView = dialog.findViewById(R.id.transactionInput) as TextInputEditText
-                val confirmButton = dialog.findViewById(R.id.confirm_button) as Button
-                confirmButton.setOnClickListener {
-                    val transactionAmount: Float = transactionTextView.text.toString().toFloat()
-                    val selectedCustomers = CustomerRecyclerView.selectedCustomerList
-                    val currentCustomer = SplashActivity.currentCustomer
+                val selectedCustomers = CustomerRecyclerView.selectedCustomerList
+                val currentCustomer = SplashActivity.currentCustomer
+                if (selectedCustomers.size > 0) { //build dialog
+                    val dialog = Dialog(this)
+                    dialog.setContentView(R.layout.transaction_dialog)
+                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))//set transparent background
+                    val transactionTextView = dialog.findViewById(R.id.transactionInput) as TextInputEditText
+                    val confirmButton = dialog.findViewById(R.id.confirm_button) as Button
+                    confirmButton.setOnClickListener {
+                        val transactionAmount: Float = transactionTextView.text.toString().toFloat()
 
-                    if (transactionAmount * selectedCustomers.size <= currentCustomer.getCustomerBalance()) {
-                        dbHelper.updateCustomerBalance(currentCustomer, -transactionAmount * selectedCustomers.size)
-                        currentCustomer.updateBalance(-transactionAmount * selectedCustomers.size) //subtract balance*selected customers
-                        //get list of selected customers
-                        for (selectedCustomer in CustomerRecyclerView.selectedCustomerList) {
-                            selectedCustomer.updateBalance(transactionAmount)
-                            dbHelper.addTransaction(currentCustomer, selectedCustomer, transactionAmount) //add transaction
-                            dbHelper.updateCustomerBalance(selectedCustomer, transactionAmount)//update database
-                        }
-                        Toast.makeText(this, "Transaction done ✔", Toast.LENGTH_LONG).show()
-                    } else
-                        Toast.makeText(this, "Current balance is less than ${transactionAmount * selectedCustomers.size}", Toast.LENGTH_LONG).show()
-                    dialog.dismiss()
-                }
-                dialog.show()
+
+                        if (transactionAmount * selectedCustomers.size <= currentCustomer.getCustomerBalance()) {
+                            dbHelper.updateCustomerBalance(currentCustomer, -transactionAmount * selectedCustomers.size)
+                            currentCustomer.updateBalance(-transactionAmount * selectedCustomers.size) //subtract balance*selected customers
+                            //get list of selected customers
+                            for (selectedCustomer in CustomerRecyclerView.selectedCustomerList) {
+                                selectedCustomer.updateBalance(transactionAmount)
+                                dbHelper.addTransaction(currentCustomer, selectedCustomer, transactionAmount) //add transaction
+                                dbHelper.updateCustomerBalance(selectedCustomer, transactionAmount)//update database
+                            }
+                            Toast.makeText(this, "Transaction done ✔", Toast.LENGTH_LONG).show()
+                        } else
+                            Toast.makeText(this, "Current balance is less than ${transactionAmount * selectedCustomers.size}", Toast.LENGTH_LONG).show()
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                } else
+                    Toast.makeText(this, "You didn't select any customer", Toast.LENGTH_LONG).show()
             }
         }
     }

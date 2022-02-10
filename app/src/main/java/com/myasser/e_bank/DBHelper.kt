@@ -19,9 +19,6 @@ const val amount_column = "Amount"
 
 class DBHelper(context: Context) :
         SQLiteOpenHelper(context, databaseName, null, version) {
-    companion object{
-        lateinit var sqlDB: SQLiteDatabase
-    }
     val customerTable = "CustomerTable"
     val transactionTable = "TransactionTable"
     private val customerTableQuery =
@@ -31,7 +28,6 @@ class DBHelper(context: Context) :
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(customerTableQuery)
         db?.execSQL(transactionTableQuery)
-        sqlDB = db!!
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, old: Int, new: Int) {}
@@ -93,7 +89,7 @@ class DBHelper(context: Context) :
     fun updateCustomerBalance(customer: Customer, amount: Float) {
         val strSQL =
                 "UPDATE $customerTable SET $balance_column = ${customer.getCustomerBalance() + amount} WHERE $name_column like '${customer.getCustomerName()}';"
-        sqlDB.execSQL(strSQL)
+        this.writableDatabase.execSQL(strSQL)
     }
 
     @SuppressLint("Range")

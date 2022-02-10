@@ -67,6 +67,8 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                             val selectedCustomer = Customer(customerName, customerPhone, customerEmail, customerImage, customerBalance)
                             dbHelper.addTransaction(currentCustomer, selectedCustomer, transactionAmount) //add transaction
                             dbHelper.updateCustomerBalance(selectedCustomer, transactionAmount)//update database
+
+                            Toast.makeText(this, "Transaction done ✔", Toast.LENGTH_LONG).show()
                         } else
                             Toast.makeText(this, "Current balance is less than $transactionAmount", Toast.LENGTH_LONG).show()
                         dialog.dismiss()

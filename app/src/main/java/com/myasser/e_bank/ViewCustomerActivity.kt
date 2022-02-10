@@ -44,7 +44,7 @@ class ViewCustomerActivity : AppCompatActivity(), View.OnClickListener {
                 val dbHelper = DBHelper(this)
                 val selectedCustomers = CustomerRecyclerView.selectedCustomerList
                 val currentCustomer = SplashActivity.currentCustomer
-                if (selectedCustomers.size > 0) { //build dialog
+                if (selectedCustomers.size > 0) { //check if the customer has selected any customer to transfer to
                     val dialog = Dialog(this)
                     dialog.setContentView(R.layout.transaction_dialog)
                     dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))//set transparent background

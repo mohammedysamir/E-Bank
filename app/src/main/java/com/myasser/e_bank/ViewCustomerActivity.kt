@@ -62,6 +62,7 @@ class ViewCustomerActivity : AppCompatActivity(), View.OnClickListener {
                             dbHelper.addTransaction(currentCustomer, selectedCustomer, transactionAmount) //add transaction
                             dbHelper.updateCustomerBalance(selectedCustomer, transactionAmount)//update database
                         }
+                        Toast.makeText(this, "Transaction done ✔", Toast.LENGTH_LONG).show()
                     } else
                         Toast.makeText(this, "Current balance is less than ${transactionAmount * selectedCustomers.size}", Toast.LENGTH_LONG).show()
                     dialog.dismiss()

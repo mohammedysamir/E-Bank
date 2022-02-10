@@ -22,7 +22,7 @@ class CustomerRecyclerView(val list: ArrayList<Customer>, val context: Context) 
         val customerName: TextView = itemView.findViewById(R.id.customer_name)
         val profile: ImageView = itemView.findViewById(R.id.profile_icon)
         val customerCard: ConstraintLayout = itemView.findViewById(R.id.customerInfoCard)
-        var isSelected: Boolean = false;
+        var isSelected: Boolean = false
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

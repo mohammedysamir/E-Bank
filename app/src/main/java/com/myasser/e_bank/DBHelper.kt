@@ -131,10 +131,10 @@ class DBHelper(context: Context) :
     @SuppressLint("Recycle")
     fun isTableEmpty(tableName: String): Boolean {
         val db = this.writableDatabase
-        val query = "SELECT count(*) FROM $tableName";
+        val query = "SELECT count(*) FROM $tableName"
         val cursor = db.rawQuery(query, null)
-        cursor.moveToFirst();
-        val count: Int = cursor.getInt(0);
+        cursor.moveToFirst()
+        val count: Int = cursor.getInt(0)
         if (count > 0)
             return false
         return true

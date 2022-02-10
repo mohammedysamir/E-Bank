@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
         app:amount="1"
+        app:decimalDigitsTextSize="20dp"
         app:baseTextColor="?attr/colorSecondary"
         app:baseTextSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
